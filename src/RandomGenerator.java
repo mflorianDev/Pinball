@@ -34,6 +34,7 @@ public class RandomGenerator {
         return userAction;
     }
 
+
     public boolean getTrueOrFalse(){
         int randomInteger = getRandomInteger(0,2);
         boolean bool = false;

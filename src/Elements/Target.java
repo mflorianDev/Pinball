@@ -8,21 +8,21 @@ public class Target extends Command implements Component {
 
     private int targetPointsMain = 500;
     private int targetPointsRamp = 250;
-    private final TouchedElement points;
+    private final TouchedElement touchedElement;
     private final boolean isInMainboard;
 
     public Target(boolean isInMainboard) {
-        this.points = new TouchedElement();
+        this.touchedElement = new TouchedElement();
         this.isInMainboard = isInMainboard;
     }
 
     @Override
     public void execute() {
         if(isInMainboard){
-            points.printTouchedElement(targetPointsMain, "Target");
+            touchedElement.printTouchedElement(targetPointsMain, "Target");
         }
         else {
-            points.printTouchedElement(targetPointsRamp, "Target in a Ramp");
+            touchedElement.printTouchedElement(targetPointsRamp, "Target in a Ramp");
         }
     }
     @Override

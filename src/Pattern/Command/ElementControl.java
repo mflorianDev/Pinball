@@ -5,14 +5,14 @@ import java.util.List;
 
 //Aufrufer
 public class ElementControl {
-    private List<Command> elements;
+    private List<Command> commandHistory;
 
     public ElementControl() {
-        elements = new ArrayList<>();
+        commandHistory = new ArrayList<>();
     }
 
     public void touchedElement(Command command) {
-        elements.add(command);
+        commandHistory.add(command);
         command.execute();
     }
 

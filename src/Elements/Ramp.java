@@ -13,15 +13,15 @@ import Pattern.Composite.Component;
 public class Ramp extends Command implements Component {
 
     private int rampPoints = 100;
-    private final TouchedElement points;
+    private final TouchedElement touchedElement;
 
     public Ramp() {
-        this.points = new TouchedElement();
+        this.touchedElement = new TouchedElement();
     }
 
     @Override
     public void execute() {
-        points.printTouchedElement(rampPoints, "Ramp");
+        touchedElement.printTouchedElement(rampPoints, "Ramp");
     }
 
     @Override
