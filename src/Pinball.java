@@ -20,17 +20,23 @@ public class Pinball implements StateVisit {
 
     private boolean userInput = true;
     private boolean isPlaying = true;
+    private StateContextGame stateContextGame = null;
+    private Boolean isBallInBoard = false;
+    private String expectedLandingLocation = null;
+    private String winTarget = null;
+
 
     public void initPinballMachine() {
         System.out.println("Wellcome to the Pinball Machine!\n");
-
+        // Create board and print included elements
         this.mainBoard = board.createMainBoard();
         board.mainBoard.printBoardElements();
         this.rampBoard = board.createRampBoard();
         board.rampBoard.printBoardElements();
-
-        //pinballContext.writeName();
         System.out.println();
+
+        // Initalize game state
+        stateContextGame = new StateContextGame();
     }
 
     public void insertCoin() throws Exception {
@@ -107,7 +113,6 @@ public class Pinball implements StateVisit {
         // Initialyze neccessary game instances
         initPinballMachine();
         // TODO: add missing instances
-        StateContextGame gameState = new StateContextGame();
         // Initialyse Scanner
         Scanner scan = new Scanner(System.in);
         System.out.println("Insert a coin to start a new game!");
@@ -123,18 +128,41 @@ public class Pinball implements StateVisit {
                 case 'i':
                     System.out.print("Insert amount (Float Number): ");
                     Float insert = scan.nextFloat();
-                    gameState.increaseCredit(insert);
+                    stateContextGame.increaseCredit(insert);
                     break;
                 case 'p':
-                    gameState.play();
+                    if (stateContextGame.getGameState() == "StateReady"){
+                        stateContextGame.play();
+                    }
                     break;
                 case 'a':
                 case 'd':
-                    // TODO: check flipper right or left
-                    // TODO: methods
+                    // If in playing mode and ball in board
+                    if (stateContextGame.getGameState() == "StatePlaying" && isBallInBoard){
+                        userBallInteraction();
+                    } else if (stateContextGame.getGameState() == "StateEnd" && isBallInBoard){
+                        /* TODO: implement win situation with call of "stateContextGame.win()"
+                            or game over situation (will called by itself on ball-loss)
+                         */
+                        //userBallInteraction();
+                        stateContextGame.win();
+                    }
                     break;
                 case 's':
-                    // TODO: set method for PLUNGER action
+                    // if in playing mode and ball not yet initalized then initalize ball
+                    if (stateContextGame.getGameState() == "StatePlaying"){
+                        isBallInBoard = true;
+                        ballRoll();
+                    }
+                    // if game state in end mode and ball not yet initialized set winnig target and initalize ball
+                    else if (stateContextGame.getGameState() == "StateEnd" && !isBallInBoard){
+                        // TODO: adapt to composite and add ramp element as possible "winTarget"
+                        int numberOfElements = board.mainBoard.getComponentList().size();
+                        int randomInteger = randomGenerator.getRandomInteger(0, numberOfElements);
+                        winTarget = this.mainBoard.getComponentList().get(randomInteger).getClass().getSimpleName();
+                        // TODO: simulate moving ball with possibility of hitting winTarget
+                        // stateContextGame.win() or wait for another round of userInput;
+                    }
                     break;
                 case 'q':
                     System.exit(0);
@@ -144,6 +172,36 @@ public class Pinball implements StateVisit {
                     break;
             }
             System.out.println();
+        }
+    }
+
+    // Simulate ball rolling accross the board
+    private void ballRoll(){
+        Boolean ballInLoop = true;
+        int numberOfElements = board.mainBoard.getComponentList().size();
+        do {
+            int randomInteger = randomGenerator.getRandomInteger(0, numberOfElements);
+            Command element = (Command) this.mainBoard.getComponentList().get(randomInteger);
+            String elementComponent =  this.mainBoard.getComponentList().get(randomInteger).getClass().getSimpleName();
+            this.elementControl.touchedElement(element);
+            ballInLoop = randomGenerator.isBallInLoop();
+        } while (ballInLoop);
+        expectedLandingLocation = randomGenerator.getExpectedLandingLocation();
+        // if ball lost inform game state
+        if (expectedLandingLocation == "lost"){
+            stateContextGame.ballLoss();
+            isBallInBoard = false;
+        }
+    }
+
+    // process interaction of ball movement and user input
+    private void userBallInteraction(){
+        // check if user action equals expected landing location of ball
+        if (expectedLandingLocation == "a" || expectedLandingLocation == "d"){
+            ballRoll();
+        } else {
+            stateContextGame.ballLoss();
+            isBallInBoard = false;
         }
     }
 

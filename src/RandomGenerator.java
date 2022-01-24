@@ -51,4 +51,37 @@ public class RandomGenerator {
         return bool;
     }
 
+    // if value between 1-3 ball keeps in loop else ball falls down
+    public boolean isBallInLoop(){
+        Random random = new Random();
+        int upperbound = 3;
+        int value = random.nextInt(upperbound);
+        if (value == 0){
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    // generate expected landing location of ball as String ("left" flipper, "right" flipper, "lost")
+    public String getExpectedLandingLocation(){
+        String userAction = "";
+        int randomInteger = getRandomInteger(0,3);
+        switch (randomInteger) {
+            case 0:
+                // left flipper == a
+                userAction = "a";
+                break;
+            case 1:
+                // right flipper == d
+                userAction = "b";
+                break;
+            case 3:
+                // ball loss == lost
+                userAction = "lost";
+                break;
+        }
+        return userAction;
+    }
+
 }

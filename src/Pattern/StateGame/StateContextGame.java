@@ -27,6 +27,10 @@ public class StateContextGame {
         gameState.win(this);
     }
 
+    public String getGameState(){
+        return this.gameState.getClass().getSimpleName();
+    }
+
 }
 
 
