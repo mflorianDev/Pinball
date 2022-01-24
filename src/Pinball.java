@@ -1,5 +1,9 @@
+import Elements.Bumper;
+import Elements.Ramp;
+import Elements.Target;
 import Pattern.Command.Command;
 import Pattern.Command.ElementControl;
+import Pattern.Composite.Component;
 import Pattern.Composite.ElementComposite;
 import Pattern.State.PinballContext;
 import Pattern.StateGame.*;
@@ -11,23 +15,23 @@ import java.util.Scanner;
 public class Pinball implements StateVisit {
 
     private final Board board = new Board();
-    private final PinballContext pinballContext = new PinballContext();
+    //private final PinballContext pinballContext = new PinballContext();
     private ElementComposite mainBoard = null;
     private ElementComposite rampBoard = null;
     private final ElementControl elementControl = new ElementControl();
-    private final PinballScanner pinballScanner = new  PinballScanner();
+    //private final PinballScanner pinballScanner = new  PinballScanner();
     private final RandomGenerator randomGenerator = new RandomGenerator();
 
-    private boolean userInput = true;
-    private boolean isPlaying = true;
+    //private boolean userInput = true;
+    //private boolean isPlaying = true;
     private StateContextGame stateContextGame = null;
     private Boolean isBallInBoard = false;
     private String expectedLandingLocation = null;
-    private String winTarget = null;
+    private Component winTarget = null;
 
 
-    public void initPinballMachine() {
-        System.out.println("Wellcome to the Pinball Machine!\n");
+    private void initPinballMachine() {
+        System.out.println("Welcome to the Pinball Machine!\n");
         // Create board and print included elements
         this.mainBoard = board.createMainBoard();
         board.mainBoard.printBoardElements();
@@ -39,6 +43,180 @@ public class Pinball implements StateVisit {
         stateContextGame = new StateContextGame();
     }
 
+
+    public void start(){
+        // Initialyze neccessary game instances
+        initPinballMachine();
+        // TODO: add missing instances
+        // Initialyse Scanner
+        Scanner scan = new Scanner(System.in);
+        System.out.println("Insert a coin to start a new game!");
+        // Initialyze main game loop for player input processing
+        while(true) {
+            System.out.println("GUIDE: \n" +
+                    "press some listed key to interact \n" +
+                    "i -> insert coins, p -> play, q -> quit\n" +
+                    "a -> left flipper, d -> right flipper, s -> plunger");
+            System.out.print("Input: ");
+            char input = scan.next().charAt(0);
+            switch (input){
+                case 'i':
+                    System.out.print("Insert amount (Float Number): ");
+                    Float insert = scan.nextFloat();
+                    stateContextGame.increaseCredit(insert);
+                    break;
+                case 'p':
+                    if (stateContextGame.getGameState().equals("StateReady")){
+                        stateContextGame.play();
+                    }
+                    break;
+                case 'a':
+                    // If in playing mode and ball in board
+                    if (stateContextGame.getGameState().equals("StatePlaying") && isBallInBoard){
+                        userBallInteraction("a");
+                    } else if (stateContextGame.getGameState().equals("StateEnd") && isBallInBoard){
+                        // win method is active, game over will be called automatic on ball loss
+                        userBallInteraction("a");
+                    }
+                    break;
+
+                case 'd':
+                    // If in playing mode and ball in board
+                    if (stateContextGame.getGameState().equals("StatePlaying") && isBallInBoard){
+                        userBallInteraction("d");
+                    } else if (stateContextGame.getGameState().equals("StateEnd") && isBallInBoard){
+                        // win method is active, game over will be called automatic on ball loss
+                        userBallInteraction("d");
+                    }
+                    break;
+                case 's':
+                    // if in playing mode and ball not yet initalized then initalize ball
+                    if (stateContextGame.getGameState().equals("StatePlaying")){
+                        isBallInBoard = true;
+                        ballRoll(mainBoard);
+                    }
+                    // if game state in end mode and ball not yet initialized set winnig target and initalize ball
+                    else if (stateContextGame.getGameState().equals("StateEnd") && !isBallInBoard){
+                        setWinTarget();
+                        ballRoll(mainBoard);
+                    }
+                    break;
+                case 'q':
+                    System.exit(0);
+                    break;
+                default:
+                    System.out.print("Input could not be processed. Try again.");
+                    break;
+            }
+            System.out.println();
+        }
+    }
+
+    // Simulate ball rolling accross a board composite (ElementComposite)
+    private void ballRoll(ElementComposite boardComposite){
+        Boolean ballInLoop = true;
+        int numberOfElements = boardComposite.getComponentList().size();
+        do {
+            int randomInteger = randomGenerator.getRandomInteger(0, numberOfElements);
+            Component component = boardComposite.getComponentList().get(randomInteger);
+            Command command = (Command) boardComposite.getComponentList().get(randomInteger);
+            String elementClassName =  boardComposite.getComponentList().get(randomInteger).getClass().getSimpleName();
+            this.elementControl.touchedElement(command);
+            if (elementClassName.equals("Ramp")){
+                System.out.println("\nThe ball is now inside a Ramp!");
+                // recall function with inner elementComposite of mainBoard as parameter
+                // TODO: casting problem on runtime!
+                ElementComposite elementComposite = (ElementComposite) boardComposite.getComponentList().get(randomInteger);
+                ballRoll(elementComposite);
+                System.out.println("The ball is leaving the ramp!\n");
+            }
+            // Check if hit component is same as winning target
+            if (component == winTarget){
+                stateContextGame.win();
+                isBallInBoard = false;
+            }
+            ballInLoop = randomGenerator.isBallInLoop();
+        } while (ballInLoop);
+        expectedLandingLocation = randomGenerator.getExpectedLandingLocation();
+        // if ball lost inform game state
+        if (expectedLandingLocation == "lost"){
+            ballIsLost();
+        }
+    }
+
+    // process interaction of ball movement and user input
+    private void userBallInteraction(String userInput){
+        // check if user action equals expected landing location of ball
+        if (expectedLandingLocation == userInput){
+            ballRoll(mainBoard);
+        } else {
+            ballIsLost();
+        }
+    }
+
+    private void ballIsLost(){
+        stateContextGame.ballLoss();
+        winTarget = null;
+        isBallInBoard = false;
+    }
+
+    private void setWinTarget(){
+        // Only mainBoard components can be a winTarget (no ramp or ramp components!)
+        int numberOfElements = board.mainBoard.getComponentList().size();
+        Component randomComponent;
+        do {
+            int randomInteger = randomGenerator.getRandomInteger(0, numberOfElements);
+            randomComponent = mainBoard.getComponentList().get(randomInteger);
+        } while (randomComponent.getClass().getSimpleName().equals("Ramp"));
+        winTarget = randomComponent;
+    }
+
+
+    // --- Visit methods for game state ---
+    @Override
+    public void visit(StateReady stateReady) {
+        // Do something
+    }
+
+    @Override
+    public void visit(StateNoCredit stateNoCredit) {
+        // Do something
+    }
+
+    @Override
+    public void visit(StatePlaying statePlaying) {
+        // Do something
+    }
+
+    @Override
+    public void visit(StateEnd stateEnd) {
+        // Do something
+    }
+
+
+    // --- Visit methods for components ---
+    @Override
+    public void visit(ElementComposite elementComposite) {
+        // Do something
+    }
+
+    @Override
+    public void visit(Bumper bumper) {
+        // Do something
+    }
+
+    @Override
+    public void visit(Target target) {
+        // Do something
+    }
+
+    @Override
+    public void visit(Ramp ramp) {
+        // Do something
+    }
+
+
+    /*
     public void insertCoin() throws Exception {
         System.out.println("Please insert a coin to start the game!");
 
@@ -85,9 +263,9 @@ public class Pinball implements StateVisit {
                 System.out.println("\nYou operated the wrong lever!");
             }
         }
-       else {
-           this.isPlaying = false;
-           System.out.println("\nThe ball is lost!");
+        else {
+            this.isPlaying = false;
+            System.out.println("\nThe ball is lost!");
         }
     }
 
@@ -109,140 +287,8 @@ public class Pinball implements StateVisit {
         System.out.println("The ball is leaving the ramp!\n");
     }
 
-    public void start(){
-        // Initialyze neccessary game instances
-        initPinballMachine();
-        // TODO: add missing instances
-        // Initialyse Scanner
-        Scanner scan = new Scanner(System.in);
-        System.out.println("Insert a coin to start a new game!");
-        // Initialyze main game loop for player input processing
-        while(true) {
-            System.out.println("GUIDE: \n" +
-                    "press some listed key to interact \n" +
-                    "i -> insert coins, p -> play, q -> quit\n" +
-                    "a -> left flipper, d -> right flipper, s -> plunger");
-            System.out.print("Input: ");
-            char input = scan.next().charAt(0);
-            switch (input){
-                case 'i':
-                    System.out.print("Insert amount (Float Number): ");
-                    Float insert = scan.nextFloat();
-                    stateContextGame.increaseCredit(insert);
-                    break;
-                case 'p':
-                    if (stateContextGame.getGameState() == "StateReady"){
-                        stateContextGame.play();
-                    }
-                    break;
-                case 'a':
-                case 'd':
-                    // If in playing mode and ball in board
-                    if (stateContextGame.getGameState() == "StatePlaying" && isBallInBoard){
-                        userBallInteraction();
-                    } else if (stateContextGame.getGameState() == "StateEnd" && isBallInBoard){
-                        /* TODO: implement win situation with call of "stateContextGame.win()"
-                            or game over situation (will called by itself on ball-loss)
-                         */
-                        //userBallInteraction();
-                        stateContextGame.win();
-                    }
-                    break;
-                case 's':
-                    // if in playing mode and ball not yet initalized then initalize ball
-                    if (stateContextGame.getGameState() == "StatePlaying"){
-                        isBallInBoard = true;
-                        ballRoll();
-                    }
-                    // if game state in end mode and ball not yet initialized set winnig target and initalize ball
-                    else if (stateContextGame.getGameState() == "StateEnd" && !isBallInBoard){
-                        // TODO: adapt to composite and add ramp element as possible "winTarget"
-                        int numberOfElements = board.mainBoard.getComponentList().size();
-                        int randomInteger = randomGenerator.getRandomInteger(0, numberOfElements);
-                        winTarget = this.mainBoard.getComponentList().get(randomInteger).getClass().getSimpleName();
-                        // TODO: simulate moving ball with possibility of hitting winTarget
-                        // stateContextGame.win() or wait for another round of userInput;
-                    }
-                    break;
-                case 'q':
-                    System.exit(0);
-                    break;
-                default:
-                    System.out.print("Input could not be processed. Try again.");
-                    break;
-            }
-            System.out.println();
-        }
-    }
-
-    // Simulate ball rolling accross the board
-    private void ballRoll(){
-        Boolean ballInLoop = true;
-        int numberOfElements = board.mainBoard.getComponentList().size();
-        do {
-            int randomInteger = randomGenerator.getRandomInteger(0, numberOfElements);
-            Command element = (Command) this.mainBoard.getComponentList().get(randomInteger);
-            String elementComponent =  this.mainBoard.getComponentList().get(randomInteger).getClass().getSimpleName();
-            this.elementControl.touchedElement(element);
-            ballInLoop = randomGenerator.isBallInLoop();
-        } while (ballInLoop);
-        expectedLandingLocation = randomGenerator.getExpectedLandingLocation();
-        // if ball lost inform game state
-        if (expectedLandingLocation == "lost"){
-            stateContextGame.ballLoss();
-            isBallInBoard = false;
-        }
-    }
-
-    // process interaction of ball movement and user input
-    private void userBallInteraction(){
-        // check if user action equals expected landing location of ball
-        if (expectedLandingLocation == "a" || expectedLandingLocation == "d"){
-            ballRoll();
-        } else {
-            stateContextGame.ballLoss();
-            isBallInBoard = false;
-        }
-    }
-
-    /*
-     Possible player actions during game:
-     - left flipper action:
-        check if state == playing
-        check if left flipper corresponds to expected input to hit the ball
-        if ball was missed -> state.ballLoss()
-     - left flipper action:
-         check if state == playing
-        check if left flipper corresponds to expected input to hit the ball
-        if ball was missed -> state.ballLoss()
-     - plunger action:
-        check if state == playing && ball in starting position
-        if ball in starting position:
-            -> init random generator (two options):
-                1) to init one hit element (target, bumper, ramp)
-                2) or fall down to flipper options (left, right, exit). Exit should have less probability!
-            -> if  1) reinitiate random generator
-        if ball was missed -> state.ballLoss()
      */
 
-    @Override
-    public void visit(StateReady stateReady) {
-        // Do something
-    }
 
-    @Override
-    public void visit(StateNoCredit stateNoCredit) {
-        // Do something
-    }
-
-    @Override
-    public void visit(StatePlaying statePlaying) {
-        // Do something
-    }
-
-    @Override
-    public void visit(StateEnd stateEnd) {
-        // Do something
-    }
 
 }

@@ -3,8 +3,10 @@ package Elements;
 import Pattern.Command.Command;
 import Pattern.Command.TouchedElement;
 import Pattern.Composite.Component;
+import Pattern.VisitorGame.AcceptVisitor;
+import Pattern.VisitorGame.StateVisit;
 
-public class Target extends Command implements Component {
+public class Target extends Command implements Component, AcceptVisitor {
 
     private int targetPointsMain = 500;
     private int targetPointsRamp = 250;
@@ -28,6 +30,11 @@ public class Target extends Command implements Component {
     @Override
     public void printBoardElements() {
         System.out.print("Target");
+    }
+
+    @Override
+    public void accept(StateVisit stateVisit) {
+        stateVisit.visit(this);
     }
 }
 

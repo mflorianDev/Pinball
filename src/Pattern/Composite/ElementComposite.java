@@ -1,10 +1,13 @@
 package Pattern.Composite;
 
+import Pattern.VisitorGame.AcceptVisitor;
+import Pattern.VisitorGame.StateVisit;
+
 import java.util.ArrayList;
 import java.util.List;
 
 /** "Komposition" */
-public class ElementComposite implements Component {
+public class ElementComposite implements Component, AcceptVisitor {
 
     private List<Component> childComponents = new ArrayList<Component>();
     private final String name;
@@ -37,5 +40,10 @@ public class ElementComposite implements Component {
 
     public List<Component> getComponentList(){
         return childComponents;
+    }
+
+    @Override
+    public void accept(StateVisit stateVisit) {
+        stateVisit.visit(this);
     }
 }

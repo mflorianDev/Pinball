@@ -3,8 +3,10 @@ package Elements;
 import Pattern.Command.Command;
 import Pattern.Command.TouchedElement;
 import Pattern.Composite.Component;
+import Pattern.VisitorGame.AcceptVisitor;
+import Pattern.VisitorGame.StateVisit;
 
-public class Bumper extends Command implements Component {
+public class Bumper extends Command implements Component, AcceptVisitor {
 
     private int bumperPointsMain = 200;
     private int bumperPointsRamp = 100;
@@ -28,5 +30,10 @@ public class Bumper extends Command implements Component {
     @Override
     public void printBoardElements() {
         System.out.print("Bumper");
+    }
+
+    @Override
+    public void accept(StateVisit stateVisit) {
+        stateVisit.visit(this);
     }
 }
