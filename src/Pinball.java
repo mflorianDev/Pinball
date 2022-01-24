@@ -29,18 +29,17 @@ public class Pinball implements StateVisit {
     private String expectedLandingLocation = null;
     private Component winTarget = null;
 
+    //Singelton
+    private static Pinball instance = null;
 
-    private void initPinballMachine() {
-        System.out.println("Welcome to the Pinball Machine!\n");
-        // Create board and print included elements
-        this.mainBoard = board.createMainBoard();
-        board.mainBoard.printBoardElements();
-        this.rampBoard = board.createRampBoard();
-        board.rampBoard.printBoardElements();
-        System.out.println();
+    private Pinball() {
+    }
 
-        // Initalize game state
-        stateContextGame = new StateContextGame();
+    public static Pinball Instance() {
+        if (instance == null) {
+            instance = new Pinball();
+        }
+        return instance;
     }
 
 
@@ -112,6 +111,19 @@ public class Pinball implements StateVisit {
         }
     }
 
+    private void initPinballMachine() {
+        System.out.println("Welcome to the Pinball Machine!\n");
+        // Create board and print included elements
+        this.mainBoard = board.createMainBoard();
+        board.mainBoard.printBoardElements();
+        this.rampBoard = board.createRampBoard();
+        board.rampBoard.printBoardElements();
+        System.out.println();
+
+        // Initalize game state
+        stateContextGame = new StateContextGame();
+    }
+
     // Simulate ball rolling accross a board composite (ElementComposite)
     private void ballRoll(ElementComposite boardComposite){
         Boolean ballInLoop = true;
@@ -122,6 +134,7 @@ public class Pinball implements StateVisit {
             Command command = (Command) boardComposite.getComponentList().get(randomInteger);
             String elementClassName =  boardComposite.getComponentList().get(randomInteger).getClass().getSimpleName();
             this.elementControl.touchedElement(command);
+
             if (elementClassName.equals("Ramp")){
                 System.out.println("\nThe ball is now inside a Ramp!");
                 // recall function with inner elementComposite of mainBoard as parameter
@@ -130,6 +143,7 @@ public class Pinball implements StateVisit {
                 ballRoll(elementComposite);
                 System.out.println("The ball is leaving the ramp!\n");
             }
+
             // Check if hit component is same as winning target
             if (component == winTarget){
                 stateContextGame.win();
