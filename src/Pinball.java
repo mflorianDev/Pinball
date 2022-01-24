@@ -2,10 +2,13 @@ import Pattern.Command.Command;
 import Pattern.Command.ElementControl;
 import Pattern.Composite.ElementComposite;
 import Pattern.State.PinballContext;
+import Pattern.StateGame.*;
+import Pattern.VisitorGame.StateVisit;
 
 import java.util.Objects;
+import java.util.Scanner;
 
-public class Pinball {
+public class Pinball implements StateVisit {
 
     private final Board board = new Board();
     private final PinballContext pinballContext = new PinballContext();
@@ -98,6 +101,90 @@ public class Pinball {
         }
 
         System.out.println("The ball is leaving the ramp!\n");
+    }
+
+    public void start(){
+        // Initialyze neccessary game instances
+        initPinballMachine();
+        // TODO: add missing instances
+        StateContextGame gameState = new StateContextGame();
+        // Initialyse Scanner
+        Scanner scan = new Scanner(System.in);
+        System.out.println("Insert a coin to start a new game!");
+        // Initialyze main game loop for player input processing
+        while(true) {
+            System.out.println("GUIDE: \n" +
+                    "press some listed key to interact \n" +
+                    "i -> insert coins, p -> play, q -> quit\n" +
+                    "a -> left flipper, d -> right flipper, s -> plunger");
+            System.out.print("Input: ");
+            char input = scan.next().charAt(0);
+            switch (input){
+                case 'i':
+                    System.out.print("Insert amount (Float Number): ");
+                    Float insert = scan.nextFloat();
+                    gameState.increaseCredit(insert);
+                    break;
+                case 'p':
+                    gameState.play();
+                    break;
+                case 'a':
+                case 'd':
+                    // TODO: check flipper right or left
+                    // TODO: methods
+                    break;
+                case 's':
+                    // TODO: set method for PLUNGER action
+                    break;
+                case 'q':
+                    System.exit(0);
+                    break;
+                default:
+                    System.out.print("Input could not be processed. Try again.");
+                    break;
+            }
+            System.out.println();
+        }
+    }
+
+    /*
+     Possible player actions during game:
+     - left flipper action:
+        check if state == playing
+        check if left flipper corresponds to expected input to hit the ball
+        if ball was missed -> state.ballLoss()
+     - left flipper action:
+         check if state == playing
+        check if left flipper corresponds to expected input to hit the ball
+        if ball was missed -> state.ballLoss()
+     - plunger action:
+        check if state == playing && ball in starting position
+        if ball in starting position:
+            -> init random generator (two options):
+                1) to init one hit element (target, bumper, ramp)
+                2) or fall down to flipper options (left, right, exit). Exit should have less probability!
+            -> if  1) reinitiate random generator
+        if ball was missed -> state.ballLoss()
+     */
+
+    @Override
+    public void visit(StateReady stateReady) {
+        // Do something
+    }
+
+    @Override
+    public void visit(StateNoCredit stateNoCredit) {
+        // Do something
+    }
+
+    @Override
+    public void visit(StatePlaying statePlaying) {
+        // Do something
+    }
+
+    @Override
+    public void visit(StateEnd stateEnd) {
+        // Do something
     }
 
 }
