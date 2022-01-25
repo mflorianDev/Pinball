@@ -89,12 +89,12 @@ public class Pinball implements StateVisit {
                     // if in playing mode and ball not yet initalized then initalize ball
                     if (stateContextGame.getGameState().equals("StatePlaying")){
                         isBallInBoard = true;
-                        ballRoll(mainBoard);
+                        ballRoll(mainBoard, false);
                     }
                     // if game state in end mode and ball not yet initialized set winnig target and initalize ball
                     else if (stateContextGame.getGameState().equals("StateEnd") && !isBallInBoard){
                         setWinTarget();
-                        ballRoll(mainBoard);
+                        ballRoll(mainBoard, false);
                     }
                     break;
                 case 'q':
@@ -121,7 +121,7 @@ public class Pinball implements StateVisit {
     }
 
     // Simulate ball rolling accross a board composite (ElementComposite)
-    private void ballRoll(ElementComposite boardComposite){
+    private void ballRoll(ElementComposite boardComposite, Boolean ballInRamp){
         boolean ballInLoop = true;
         int numberOfElements = boardComposite.getComponentList().size();
         do {
@@ -138,8 +138,7 @@ public class Pinball implements StateVisit {
                 TODO: change parameter to dynamically choosen ElementComposite.
                     Problem: How to access the Element of type ElementComposite?
                  */
-                ballRoll(rampBoard);
-                System.out.println("The ball is leaving the ramp!\n");
+                ballRoll(rampBoard, true);
             }
             // Check if hit component is same as winning target
             if (component == winTarget){
@@ -151,15 +150,18 @@ public class Pinball implements StateVisit {
                 ballInLoop = randomGenerator.isBallInLoop();
             }
         } while (ballInLoop);
-        expectedLandingLocation = randomGenerator.getExpectedLandingLocation();
-        System.out.println("landingLocation: " + expectedLandingLocation);
-        // if ball lost inform game state
-        if (expectedLandingLocation == "lost"){
-            ballIsLost();
-            System.out.println("Ball unfortunately landed in the die hole.\n" +
-                    "The ball is lost!");
+        if (ballInRamp){
+            System.out.println("The ball is leaving the ramp!\n");
         } else {
-            System.out.println("Press button " + expectedLandingLocation + " to hit the ball!");
+            expectedLandingLocation = randomGenerator.getExpectedLandingLocation();
+            // if ball lost inform game state
+            if (expectedLandingLocation == "lost"){
+                ballIsLost();
+                System.out.println("Ball unfortunately landed in the die hole.\n" +
+                        "The ball is lost!");
+            } else {
+                System.out.println("Press button " + expectedLandingLocation + " to hit the ball!");
+            }
         }
     }
 
@@ -167,7 +169,7 @@ public class Pinball implements StateVisit {
     private void userBallInteraction(String userInput){
         // check if user action equals expected landing location of ball
         if (expectedLandingLocation == userInput){
-            ballRoll(mainBoard);
+            ballRoll(mainBoard, false);
         } else {
             ballIsLost();
         }
