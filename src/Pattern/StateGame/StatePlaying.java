@@ -3,7 +3,7 @@ package Pattern.StateGame;
 import Pattern.VisitorGame.AcceptVisitor;
 import Pattern.VisitorGame.StateVisit;
 
-public class StatePlaying implements StatelikeGame, AcceptVisitor {
+public class StatePlaying implements StatelikeGame {
     private Float credit = null;
     private Integer ballLossCounter = 0;
 
@@ -36,16 +36,6 @@ public class StatePlaying implements StatelikeGame, AcceptVisitor {
     @Override
     public void win(StateContextGame STATE_CONTEXT) {
         // Will never be called! No usability!
-    }
-
-    @Override
-    public void accept(StateVisit stateVisit) {
-        stateVisit.visit(this);
-    }
-
-    @Override
-    public int getPointsOrCredit() {
-        return 0;
     }
 
 }

@@ -3,7 +3,7 @@ package Pattern.StateGame;
 import Pattern.VisitorGame.AcceptVisitor;
 import Pattern.VisitorGame.StateVisit;
 
-public class StateEnd implements StatelikeGame, AcceptVisitor {
+public class StateEnd implements StatelikeGame {
     private Float credit = null;
 
     public StateEnd(Float credit) {
@@ -36,16 +36,6 @@ public class StateEnd implements StatelikeGame, AcceptVisitor {
     public void win(StateContextGame STATE_CONTEXT) {
         System.out.println("WINNER! New game will be started soon!");
         STATE_CONTEXT.setState(new StatePlaying(credit));
-    }
-
-    @Override
-    public void accept(StateVisit stateVisit) {
-        stateVisit.visit(this);
-    }
-
-    @Override
-    public int getPointsOrCredit() {
-        return 0;
     }
 
 }

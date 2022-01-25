@@ -3,7 +3,7 @@ package Pattern.StateGame;
 import Pattern.VisitorGame.AcceptVisitor;
 import Pattern.VisitorGame.StateVisit;
 
-public class StateNoCredit implements StatelikeGame, AcceptVisitor {
+public class StateNoCredit implements StatelikeGame {
     private Float credit = null;
 
     public StateNoCredit(Float credit) {
@@ -38,13 +38,4 @@ public class StateNoCredit implements StatelikeGame, AcceptVisitor {
         // Will never be called! No usability!
     }
 
-    @Override
-    public void accept(StateVisit stateVisit) {
-        stateVisit.visit(this);
-    }
-
-    @Override
-    public int getPointsOrCredit() {
-        return 0;
-    }
 }

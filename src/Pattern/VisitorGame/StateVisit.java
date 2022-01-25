@@ -11,14 +11,6 @@ import Pattern.StateGame.StateReady;
 
 public interface StateVisit {
 
-    // Visit game states
-    public void visit(StateNoCredit stateNoCredit);
-    public void visit(StateReady stateReady);
-    public void visit(StatePlaying statePlaying);
-    public void visit(StateEnd stateEnd);
-
-
-
     // Visit game components
     public int visit(Bumper bumper);
     public int visit(Target target);

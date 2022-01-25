@@ -4,10 +4,7 @@ import Elements.Bumper;
 import Elements.Ramp;
 import Elements.Target;
 import Pattern.Composite.Component;
-import Pattern.StateGame.StateEnd;
-import Pattern.StateGame.StateNoCredit;
-import Pattern.StateGame.StatePlaying;
-import Pattern.StateGame.StateReady;
+
 
 public class ElementVisitor implements StateVisit{
 
@@ -38,26 +35,6 @@ public class ElementVisitor implements StateVisit{
         this.points = points;
     }
 
-
-    @Override
-    public void visit(StateNoCredit stateNoCredit) {
-
-    }
-
-    @Override
-    public void visit(StateReady stateReady) {
-
-    }
-
-    @Override
-    public void visit(StatePlaying statePlaying) {
-
-    }
-
-    @Override
-    public void visit(StateEnd stateEnd) {
-
-    }
 
 
     @Override
