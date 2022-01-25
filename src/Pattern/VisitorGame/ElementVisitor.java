@@ -66,11 +66,13 @@ public class ElementVisitor implements StateVisit{
     }
 
     @Override
-    public void visit(Target target) {
+    public int visit(Target target) {
+        return 0;
     }
 
     @Override
-    public void visit(Ramp ramp) {
+    public int visit(Ramp ramp) {
         setPoints(ramp.getPointsOrCredit());
+        return 0;
     }
 }

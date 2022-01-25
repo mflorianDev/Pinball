@@ -130,8 +130,8 @@ public class Pinball implements StateVisit {
             Command command = (Command) component;
             this.elementControl.touchedElement(command);
             // Get points of hit element and add to totalPoints
-            // TODO: Problem: How to access the Element of type ElementComposite?
-            //totalPoints += this.visit(element);
+            totalPoints += component.getPoints();
+            System.out.println("Total points: " + totalPoints);
             if (component.getClass() == Ramp.class){
                 System.out.println("\nThe ball is now inside a Ramp!");
                 /*
@@ -152,6 +152,7 @@ public class Pinball implements StateVisit {
             }
         } while (ballInLoop);
         expectedLandingLocation = randomGenerator.getExpectedLandingLocation();
+        System.out.println("landingLocation: " + expectedLandingLocation);
         // if ball lost inform game state
         if (expectedLandingLocation == "lost"){
             ballIsLost();

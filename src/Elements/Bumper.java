@@ -41,4 +41,14 @@ public class Bumper extends Command implements Component, AcceptVisitor {
     public int getPointsOrCredit() {
         return this.bumperPointsMain;
     }
+
+    @Override
+    public int getPoints() {
+        if(isInMainboard){
+            return bumperPointsMain;
+        }
+        else{
+            return bumperPointsRamp;
+        }
+    }
 }

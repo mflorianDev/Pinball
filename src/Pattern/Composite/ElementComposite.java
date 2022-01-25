@@ -30,6 +30,11 @@ public class ElementComposite implements Component {
         }
     }
 
+    @Override
+    public int getPoints() {
+        return 0;
+    }
+
     public void add(Component component) {
         childComponents.add(component);
     }

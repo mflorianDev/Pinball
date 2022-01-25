@@ -66,7 +66,9 @@ public class RandomGenerator {
     // generate expected landing location of ball as String ("left" flipper, "right" flipper, "lost")
     public String getExpectedLandingLocation(){
         String userAction = "";
-        int randomInteger = getRandomInteger(0,3);
+        Random random = new Random();
+        int upperbound = 3;
+        int randomInteger = random.nextInt(upperbound);
         // TODO: implement System.out to inform user of matching input value to hit the ball
         switch (randomInteger) {
             case 0:
@@ -77,7 +79,7 @@ public class RandomGenerator {
                 // right flipper == d
                 userAction = "d";
                 break;
-            case 3:
+            case 2:
                 // ball loss == lost
                 userAction = "lost";
                 break;

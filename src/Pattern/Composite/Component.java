@@ -4,4 +4,6 @@ package Pattern.Composite;
 public interface Component {
 
     void printBoardElements();
+
+    int getPoints();
 }

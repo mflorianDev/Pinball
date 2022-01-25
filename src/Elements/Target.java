@@ -42,5 +42,14 @@ public class Target extends Command implements Component, AcceptVisitor {
         return this.targetPointsMain;
     }
 
+    @Override
+    public int getPoints() {
+        if(isInMainboard){
+            return targetPointsMain;
+        }
+        else {
+            return targetPointsRamp;
+        }
+    }
 }
 

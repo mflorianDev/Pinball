@@ -41,4 +41,8 @@ public class Ramp extends Command implements Component, AcceptVisitor {
         return this.rampPoints;
     }
 
+    @Override
+    public int getPoints() {
+        return rampPoints;
+    }
 }
