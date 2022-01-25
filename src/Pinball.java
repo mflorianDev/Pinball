@@ -26,8 +26,9 @@ public class Pinball implements StateVisit {
     private Boolean isBallInBoard = false;
     private String expectedLandingLocation = null;
     private Component winTarget = null;
+    private int totalPoints = 0;
 
-    //Singelton
+    // Singleton
     private static Pinball instance = null;
 
     private Pinball() {
@@ -41,13 +42,13 @@ public class Pinball implements StateVisit {
     }
 
     public void start(){
-        // Initialyze neccessary game instances
+        // Initialize necessary game instances
         initPinballMachine();
-        // TODO: add missing instances
-        // Initialyse Scanner
+        // TODO: new instances can be initialized here
+        // Initialize Scanner
         Scanner scan = new Scanner(System.in);
         System.out.println("Insert a coin to start a new game!");
-        // Initialyze main game loop for player input processing
+        // Initialize main game loop for player input processing
         while(true) {
             System.out.println("GUIDE: \n" +
                     "press some listed key to interact \n" +
@@ -60,32 +61,19 @@ public class Pinball implements StateVisit {
                     System.out.print("Insert amount (Float Number): ");
                     Float insert = scan.nextFloat();
                     stateContextGame.increaseCredit(insert);
-                    //vielleicht hier noch ein Hinweis, was der User als nächstes machen muss
-                    //System.out.println("Press p to start the game!");
                     break;
                 case 'p':
                     if (stateContextGame.getGameState().equals("StateReady")){
                         stateContextGame.play();
                     }
-                    //vielleicht auch hier wieder ein Hinweis:
-                    //System.out.print("Press s for the plunger!");
                     break;
                 case 'a':
-                    // If in playing mode and ball in board
-                    if (stateContextGame.getGameState().equals("StatePlaying") && isBallInBoard){
-                        userBallInteraction("a");
-                    } else if (stateContextGame.getGameState().equals("StateEnd") && isBallInBoard){
-                        // win method is active, game over will be called automatic on ball loss
-                        userBallInteraction("a");
-                    }
-                    /*
-                    sollte auch so funtionieren:
                     if (stateContextGame.getGameState().equals("StatePlaying")
-                        || stateContextGame.getGameState().equals("StateEnd")
-                        && isBallInBoard){
+                            || stateContextGame.getGameState().equals("StateEnd")
+                            && isBallInBoard){
+                        // StateEnd: win method is active, game over will be called automatic on ball loss
                             userBallInteraction("a");
                      }
-                     */
                     break;
 
                 case 'd':
@@ -93,7 +81,7 @@ public class Pinball implements StateVisit {
                     if (stateContextGame.getGameState().equals("StatePlaying") && isBallInBoard){
                         userBallInteraction("d");
                     } else if (stateContextGame.getGameState().equals("StateEnd") && isBallInBoard){
-                        // win method is active, game over will be called automatic on ball loss
+                        // win method is active, game over will be called automatically on ball loss
                         userBallInteraction("d");
                     }
                     break;
@@ -128,7 +116,6 @@ public class Pinball implements StateVisit {
         this.rampBoard = board.createRampBoard();
         board.rampBoard.printBoardElements();
         System.out.println();
-
         // Initalize game state
         stateContextGame = new StateContextGame();
     }
@@ -139,33 +126,39 @@ public class Pinball implements StateVisit {
         int numberOfElements = boardComposite.getComponentList().size();
         do {
             int randomInteger = randomGenerator.getRandomInteger(0, numberOfElements);
-
             Component component = boardComposite.getComponentList().get(randomInteger);
             Command command = (Command) component;
-
             this.elementControl.touchedElement(command);
-
+            // Get points of hit element and add to totalPoints
+            // TODO: Problem: How to access the Element of type ElementComposite?
+            //totalPoints += this.visit(element);
             if (component.getClass() == Ramp.class){
                 System.out.println("\nThe ball is now inside a Ramp!");
+                /*
+                TODO: change parameter to dynamically choosen ElementComposite.
+                    Problem: How to access the Element of type ElementComposite?
+                 */
                 ballRoll(rampBoard);
                 System.out.println("The ball is leaving the ramp!\n");
             }
-
             // Check if hit component is same as winning target
             if (component == winTarget){
                 stateContextGame.win();
+                System.out.println("Congratulations! You have reached a total score of " + totalPoints);
                 ballInLoop = false;
                 isBallInBoard = false;
             } else{
                 ballInLoop = randomGenerator.isBallInLoop();
             }
-
         } while (ballInLoop);
-
         expectedLandingLocation = randomGenerator.getExpectedLandingLocation();
         // if ball lost inform game state
         if (expectedLandingLocation == "lost"){
             ballIsLost();
+            System.out.println("Ball unfortunately landed in the die hole.\n" +
+                    "The ball is lost!");
+        } else {
+            System.out.println("Press button " + expectedLandingLocation + " to hit the ball!");
         }
     }
 
@@ -224,18 +217,17 @@ public class Pinball implements StateVisit {
 
     @Override
     public int visit(Bumper bumper) {
-        // Do something
-        return 0;
+        return bumper.getPointsOrCredit();
     }
 
     @Override
-    public void visit(Target target) {
-        // Do something
+    public int visit(Target target) {
+        return target.getPointsOrCredit();
     }
 
     @Override
-    public void visit(Ramp ramp) {
-        // Do something
+    public int visit(Ramp ramp) {
+        return ramp.getPointsOrCredit();
     }
 
 

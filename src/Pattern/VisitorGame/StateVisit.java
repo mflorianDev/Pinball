@@ -21,7 +21,7 @@ public interface StateVisit {
 
     // Visit game components
     public int visit(Bumper bumper);
-    public void visit(Target target);
-    public void visit(Ramp ramp);
+    public int visit(Target target);
+    public int visit(Ramp ramp);
 
 }

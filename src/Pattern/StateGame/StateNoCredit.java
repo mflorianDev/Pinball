@@ -18,7 +18,7 @@ public class StateNoCredit implements StatelikeGame, AcceptVisitor {
         } else if (credit < 1) {
             System.out.println("Not enough credit to start a new game! Please insert more coins.");
         } else {
-            System.out.println("Ready to Play!");
+            System.out.println("Ready to Play! Press 'p' to start a new game.");
             STATE_CONTEXT.setState(new StateReady(credit));
         }
     }

@@ -34,7 +34,7 @@ public class StateEnd implements StatelikeGame, AcceptVisitor {
 
     @Override
     public void win(StateContextGame STATE_CONTEXT) {
-        System.out.println("WINNER! New game will be started!");
+        System.out.println("WINNER! New game will be started soon!");
         STATE_CONTEXT.setState(new StatePlaying(credit));
     }
 

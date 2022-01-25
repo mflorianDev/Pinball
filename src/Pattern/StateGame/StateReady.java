@@ -20,7 +20,7 @@ public class StateReady implements StatelikeGame, AcceptVisitor {
     @Override
     public void play(StateContextGame STATE_CONTEXT) {
         credit--;
-        System.out.println("Game Started. Push the plunger to initialize the ball");
+        System.out.println("Game Started. Press 's' to operate the plunger to initialize the ball");
         STATE_CONTEXT.setState(new StatePlaying(credit));
     }
 
