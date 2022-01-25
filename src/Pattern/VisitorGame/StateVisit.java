@@ -17,9 +17,10 @@ public interface StateVisit {
     public void visit(StatePlaying statePlaying);
     public void visit(StateEnd stateEnd);
 
+
+
     // Visit game components
-    public void visit(ElementComposite elementComposite);
-    public void visit(Bumper bumper);
+    public int visit(Bumper bumper);
     public void visit(Target target);
     public void visit(Ramp ramp);
 

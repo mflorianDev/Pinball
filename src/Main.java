@@ -3,7 +3,10 @@ import Pattern.Singelton.Multiball;
 public class Main {
 
     public static void main(String[] args) throws Exception {
-
+/*
+        VisitorTest vt = new VisitorTest();
+        vt.init();
+*/
         //just for testing the Multiball as a Singelton
         Multiball multiball = Multiball.Instance();
         multiball.write();

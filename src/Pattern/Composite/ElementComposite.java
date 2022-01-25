@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /** "Komposition" */
-public class ElementComposite implements Component, AcceptVisitor {
+public class ElementComposite implements Component {
 
     private List<Component> childComponents = new ArrayList<Component>();
     private final String name;
@@ -42,8 +42,5 @@ public class ElementComposite implements Component, AcceptVisitor {
         return childComponents;
     }
 
-    @Override
-    public void accept(StateVisit stateVisit) {
-        stateVisit.visit(this);
-    }
+
 }

@@ -36,5 +36,11 @@ public class Target extends Command implements Component, AcceptVisitor {
     public void accept(StateVisit stateVisit) {
         stateVisit.visit(this);
     }
+
+    @Override
+    public int getPointsOrCredit() {
+        return this.targetPointsMain;
+    }
+
 }
 

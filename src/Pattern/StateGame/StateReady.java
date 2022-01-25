@@ -38,4 +38,9 @@ public class StateReady implements StatelikeGame, AcceptVisitor {
     public void accept(StateVisit stateVisit) {
         stateVisit.visit(this);
     }
+
+    @Override
+    public int getPointsOrCredit() {
+        return 0;
+    }
 }

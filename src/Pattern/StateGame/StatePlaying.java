@@ -43,4 +43,9 @@ public class StatePlaying implements StatelikeGame, AcceptVisitor {
         stateVisit.visit(this);
     }
 
+    @Override
+    public int getPointsOrCredit() {
+        return 0;
+    }
+
 }

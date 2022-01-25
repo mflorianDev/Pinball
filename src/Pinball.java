@@ -5,11 +5,9 @@ import Pattern.Command.Command;
 import Pattern.Command.ElementControl;
 import Pattern.Composite.Component;
 import Pattern.Composite.ElementComposite;
-import Pattern.State.PinballContext;
 import Pattern.StateGame.*;
 import Pattern.VisitorGame.StateVisit;
 
-import java.util.Objects;
 import java.util.Scanner;
 
 public class Pinball implements StateVisit {
@@ -42,7 +40,6 @@ public class Pinball implements StateVisit {
         return instance;
     }
 
-
     public void start(){
         // Initialyze neccessary game instances
         initPinballMachine();
@@ -56,18 +53,22 @@ public class Pinball implements StateVisit {
                     "press some listed key to interact \n" +
                     "i -> insert coins, p -> play, q -> quit\n" +
                     "a -> left flipper, d -> right flipper, s -> plunger");
-            System.out.print("Input: ");
+            System.out.print("\nInput: ");
             char input = scan.next().charAt(0);
             switch (input){
                 case 'i':
                     System.out.print("Insert amount (Float Number): ");
                     Float insert = scan.nextFloat();
                     stateContextGame.increaseCredit(insert);
+                    //vielleicht hier noch ein Hinweis, was der User als nächstes machen muss
+                    //System.out.println("Press p to start the game!");
                     break;
                 case 'p':
                     if (stateContextGame.getGameState().equals("StateReady")){
                         stateContextGame.play();
                     }
+                    //vielleicht auch hier wieder ein Hinweis:
+                    //System.out.print("Press s for the plunger!");
                     break;
                 case 'a':
                     // If in playing mode and ball in board
@@ -77,6 +78,14 @@ public class Pinball implements StateVisit {
                         // win method is active, game over will be called automatic on ball loss
                         userBallInteraction("a");
                     }
+                    /*
+                    sollte auch so funtionieren:
+                    if (stateContextGame.getGameState().equals("StatePlaying")
+                        || stateContextGame.getGameState().equals("StateEnd")
+                        && isBallInBoard){
+                            userBallInteraction("a");
+                     }
+                     */
                     break;
 
                 case 'd':
@@ -126,31 +135,33 @@ public class Pinball implements StateVisit {
 
     // Simulate ball rolling accross a board composite (ElementComposite)
     private void ballRoll(ElementComposite boardComposite){
-        Boolean ballInLoop = true;
+        boolean ballInLoop = true;
         int numberOfElements = boardComposite.getComponentList().size();
         do {
             int randomInteger = randomGenerator.getRandomInteger(0, numberOfElements);
+
             Component component = boardComposite.getComponentList().get(randomInteger);
-            Command command = (Command) boardComposite.getComponentList().get(randomInteger);
-            String elementClassName =  boardComposite.getComponentList().get(randomInteger).getClass().getSimpleName();
+            Command command = (Command) component;
+
             this.elementControl.touchedElement(command);
 
-            if (elementClassName.equals("Ramp")){
+            if (component.getClass() == Ramp.class){
                 System.out.println("\nThe ball is now inside a Ramp!");
-                // recall function with inner elementComposite of mainBoard as parameter
-                // TODO: casting problem on runtime!
-                ElementComposite elementComposite = (ElementComposite) boardComposite.getComponentList().get(randomInteger);
-                ballRoll(elementComposite);
+                ballRoll(rampBoard);
                 System.out.println("The ball is leaving the ramp!\n");
             }
 
             // Check if hit component is same as winning target
             if (component == winTarget){
                 stateContextGame.win();
+                ballInLoop = false;
                 isBallInBoard = false;
+            } else{
+                ballInLoop = randomGenerator.isBallInLoop();
             }
-            ballInLoop = randomGenerator.isBallInLoop();
+
         } while (ballInLoop);
+
         expectedLandingLocation = randomGenerator.getExpectedLandingLocation();
         // if ball lost inform game state
         if (expectedLandingLocation == "lost"){
@@ -209,14 +220,12 @@ public class Pinball implements StateVisit {
 
 
     // --- Visit methods for components ---
-    @Override
-    public void visit(ElementComposite elementComposite) {
-        // Do something
-    }
+
 
     @Override
-    public void visit(Bumper bumper) {
+    public int visit(Bumper bumper) {
         // Do something
+        return 0;
     }
 
     @Override
