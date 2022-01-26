@@ -5,8 +5,8 @@ import Pattern.Composite.ElementComposite;
 
 public class Board {
 
-    ElementComposite mainBoard =  new ElementComposite("main");
-    ElementComposite rampBoard = new ElementComposite("ramp");
+    public ElementComposite mainBoard =  new ElementComposite("main");
+    public ElementComposite rampBoard = new ElementComposite("ramp");
 
     public ElementComposite createMainBoard(){
         Target target1 = new Target(true);

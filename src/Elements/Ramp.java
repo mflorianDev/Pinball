@@ -1,16 +1,10 @@
 package Elements;
 
-//Konkreter Befehl
-
-//Rampe
-//Target
-//CommandBumper
-
 import Pattern.Command.Command;
 import Pattern.Command.TouchedElement;
 import Pattern.Composite.Component;
 import Pattern.VisitorGame.AcceptVisitor;
-import Pattern.VisitorGame.StateVisit;
+import Pattern.VisitorGame.Visitor;
 
 public class Ramp extends Command implements Component, AcceptVisitor {
 
@@ -32,13 +26,8 @@ public class Ramp extends Command implements Component, AcceptVisitor {
     }
 
     @Override
-    public void accept(StateVisit stateVisit) {
-        stateVisit.visit(this);
-    }
-
-    @Override
-    public int getPointsOrCredit() {
-        return this.rampPoints;
+    public void accept(Visitor visitor) {
+        visitor.visit(this);
     }
 
     @Override

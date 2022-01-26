@@ -1,12 +1,9 @@
-import Elements.Bumper;
 import Elements.Ramp;
-import Elements.Target;
 import Pattern.Command.Command;
 import Pattern.Command.ElementControl;
 import Pattern.Composite.Component;
 import Pattern.Composite.ElementComposite;
 import Pattern.StateGame.*;
-import Pattern.VisitorGame.StateVisit;
 
 import java.util.Scanner;
 
@@ -51,7 +48,7 @@ public class Pinball {
             switch (input){
                 case 'i':
                     System.out.print("Insert amount (Float Number): ");
-                    Float insert = scan.nextFloat();
+                    float insert = scan.nextFloat();
                     stateContextGame.increaseCredit(insert);
                     break;
                 case 'p':
@@ -60,6 +57,7 @@ public class Pinball {
                     }
                     break;
                 case 'a':
+
                     if (stateContextGame.getGameState().equals("StatePlaying")
                             || stateContextGame.getGameState().equals("StateEnd")
                             && isBallInBoard){
@@ -68,7 +66,9 @@ public class Pinball {
                      }
                     break;
 
+
                 case 'd':
+
                     // If in playing mode and ball in board
                     if (stateContextGame.getGameState().equals("StatePlaying") && isBallInBoard){
                         userBallInteraction("d");
@@ -76,6 +76,15 @@ public class Pinball {
                         // win method is active, game over will be called automatically on ball loss
                         userBallInteraction("d");
                     }
+                     /*
+                    if (stateContextGame.getGameState().equals("StatePlaying")
+                            || stateContextGame.getGameState().equals("StateEnd")
+                            && isBallInBoard){
+                        // StateEnd: win method is active, game over will be called automatic on ball loss
+                        userBallInteraction(Character.toString(input));
+                    }
+                      */
+
                     break;
                 case 's':
                     // if in playing mode and ball not yet initalized then initalize ball
@@ -148,6 +157,12 @@ public class Pinball {
             expectedLandingLocation = randomGenerator.getExpectedLandingLocation();
             // if ball lost inform game state
             if (expectedLandingLocation == "lost"){
+                /**Ich würde die beiden Zeilen (166 und 167) umdrehen! zuerst System.ou.print und dann ballIsLost, wegen der Ausgabe
+
+                 * Ball lost! 2 balls left.
+                 * Ball unfortunately landed in the die hole.
+                 * The ball is lost!
+                 */
                 ballIsLost();
                 System.out.println("Ball unfortunately landed in the die hole.\n" +
                         "The ball is lost!");

@@ -3,53 +3,27 @@ package Pattern.VisitorGame;
 import Elements.Bumper;
 import Elements.Ramp;
 import Elements.Target;
-import Pattern.Composite.Component;
 
+public class ElementVisitor implements Visitor {
 
-public class ElementVisitor implements StateVisit{
+    private int elementPoints;
 
-    public int points;
-
-    public int getPointsFromElement(Component component){
-        int pointsFromElement = 0;
-
-        if(component.getClass() == Ramp.class){
-            this.visit((Ramp) component);
-            pointsFromElement = this.points;
-        }
-
-        if(component.getClass() == Bumper.class){
-            pointsFromElement = this.visit((Bumper) component);
-        }
-
-        if(component.getClass() == Target.class){
-            this.visit((Target) component);
-        }
-
-        System.out.println(pointsFromElement);
-
-        return pointsFromElement;
-    }
-
-    public void setPoints(int points) {
-        this.points = points;
-    }
-
-
-
-    @Override
-    public int visit(Bumper bumper) {
-        return bumper.getPointsOrCredit();
+    public int getElementPoints() {
+        return elementPoints;
     }
 
     @Override
-    public int visit(Target target) {
-        return 0;
+    public void visit(Bumper bumper) {
+        this.elementPoints = bumper.getPoints();
     }
 
     @Override
-    public int visit(Ramp ramp) {
-        setPoints(ramp.getPointsOrCredit());
-        return 0;
+    public void visit(Target target) {
+        this.elementPoints = target.getPoints();
+    }
+
+    @Override
+    public void visit(Ramp ramp) {
+        this.elementPoints = ramp.getPoints();
     }
 }

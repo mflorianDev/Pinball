@@ -9,11 +9,11 @@ import Pattern.StateGame.StateNoCredit;
 import Pattern.StateGame.StatePlaying;
 import Pattern.StateGame.StateReady;
 
-public interface StateVisit {
+public interface Visitor {
 
     // Visit game components
-    public int visit(Bumper bumper);
-    public int visit(Target target);
-    public int visit(Ramp ramp);
+    public void visit(Bumper bumper);
+    public void visit(Target target);
+    public void visit(Ramp ramp);
 
 }

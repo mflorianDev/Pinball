@@ -1,17 +1,15 @@
 package Pattern.StateGame;
 
-import Pattern.VisitorGame.AcceptVisitor;
-import Pattern.VisitorGame.StateVisit;
 
 public class StateReady implements StatelikeGame {
-    private Float credit = null;
+    private float credit = 0;
 
     public StateReady(Float credit) {
         this.credit = credit;
     }
 
     @Override
-    public void increaseCredit(final StateContextGame STATE_CONTEXT, final Float INSERT) {
+    public void increaseCredit(final StateContextGame STATE_CONTEXT, final float INSERT) {
         credit += INSERT;
         System.out.println("Credit increased. Push play to start a new game!");
         STATE_CONTEXT.setState(new StateReady(credit));

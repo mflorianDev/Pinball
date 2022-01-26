@@ -1,12 +1,9 @@
 package Pattern.Composite;
 
-import Pattern.VisitorGame.AcceptVisitor;
-import Pattern.VisitorGame.StateVisit;
-
 import java.util.ArrayList;
 import java.util.List;
 
-/** "Komposition" */
+//Kompositum
 public class ElementComposite implements Component {
 
     private List<Component> childComponents = new ArrayList<Component>();
