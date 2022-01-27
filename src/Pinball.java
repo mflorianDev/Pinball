@@ -60,22 +60,39 @@ public class Pinball {
                     }
                     break;
                 case 'a':
+                    // If in playing mode and ball in board
+                    /*
+                    if (stateContextGame.getGameState().equals("StatePlaying") && isBallInBoard){
+                        userBallInteraction("a");
+                    } else if (stateContextGame.getGameState().equals("StateEnd") && isBallInBoard){
+                        // win method is active, game over will be called automatically on ball loss
+                        userBallInteraction("a");
+                    }
+                     */
                     if (stateContextGame.getGameState().equals("StatePlaying")
                             || stateContextGame.getGameState().equals("StateEnd")
                             && isBallInBoard){
                         // StateEnd: win method is active, game over will be called automatic on ball loss
-                            userBallInteraction("a");
+                        userBallInteraction("a");
                      }
                     break;
-
                 case 'd':
                     // If in playing mode and ball in board
+                    /*
                     if (stateContextGame.getGameState().equals("StatePlaying") && isBallInBoard){
                         userBallInteraction("d");
                     } else if (stateContextGame.getGameState().equals("StateEnd") && isBallInBoard){
                         // win method is active, game over will be called automatically on ball loss
                         userBallInteraction("d");
                     }
+                     */
+                    if (stateContextGame.getGameState().equals("StatePlaying")
+                            || stateContextGame.getGameState().equals("StateEnd")
+                            && isBallInBoard){
+                        // win method is active, game over will be called automatically on ball loss
+                        userBallInteraction("d");
+                    }
+
                     break;
                 case 's':
                     // if in playing mode and ball not yet initalized then initalize ball
@@ -86,6 +103,7 @@ public class Pinball {
                     // if game state in end mode and ball not yet initialized set winnig target and initalize ball
                     else if (stateContextGame.getGameState().equals("StateEnd") && !isBallInBoard){
                         setWinTarget();
+                        isBallInBoard = true;
                         ballRoll(mainBoard, false);
                     }
                     break;
@@ -134,10 +152,11 @@ public class Pinball {
             }
             // Check if hit component is same as winning target
             if (component == winTarget){
-                stateContextGame.win();
                 System.out.println("Congratulations! You have reached a total score of " + totalPoints);
-                ballInLoop = false;
+                stateContextGame.win();
                 isBallInBoard = false;
+                winTarget = null;
+                return;
             } else{
                 ballInLoop = randomGenerator.isBallInLoop();
             }
@@ -148,11 +167,10 @@ public class Pinball {
             expectedLandingLocation = randomGenerator.getExpectedLandingLocation();
             // if ball lost inform game state
             if (expectedLandingLocation == "lost"){
+                System.out.println("Ball unfortunately landed in the die hole.");
                 ballIsLost();
-                System.out.println("Ball unfortunately landed in the die hole.\n" +
-                        "The ball is lost!");
             } else {
-                System.out.println("Press button " + expectedLandingLocation + " to hit the ball!");
+                System.out.println("Press button '" + expectedLandingLocation + "' to hit the ball!");
             }
         }
     }
