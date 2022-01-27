@@ -2,8 +2,7 @@ import Pattern.Singelton.Multiball;
 
 public class Main {
 
-    public static void main(String[] args) throws Exception {
-
+    public static void main(String[] args) {
 
         //Pinball.Instance() as Pinball is a Singelton
         Pinball pinball = Pinball.Instance();
@@ -14,6 +13,7 @@ public class Main {
         Multiball multiball = Multiball.Instance();
         multiball.write();
         */
+
 
     }
 }

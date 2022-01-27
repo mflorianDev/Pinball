@@ -1,6 +1,6 @@
 package Pattern.Command;
 
-//Ausgabe
+//Empfänger
 public class TouchedElement {
 
 

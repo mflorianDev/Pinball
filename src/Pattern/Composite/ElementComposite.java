@@ -1,12 +1,9 @@
 package Pattern.Composite;
 
-import Pattern.VisitorGame.AcceptVisitor;
-import Pattern.VisitorGame.StateVisit;
-
 import java.util.ArrayList;
 import java.util.List;
 
-/** "Komposition" */
+//Kompositum
 public class ElementComposite implements Component {
 
     private List<Component> childComponents = new ArrayList<Component>();
@@ -28,11 +25,6 @@ public class ElementComposite implements Component {
                 System.out.print(", ");
             }
         }
-    }
-
-    @Override
-    public int getPoints() {
-        return 0;
     }
 
     public void add(Component component) {

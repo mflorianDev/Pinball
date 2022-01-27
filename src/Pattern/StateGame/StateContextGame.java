@@ -11,7 +11,7 @@ public class StateContextGame {
         gameState = NEW_STATE;
     }
 
-    public void increaseCredit(final Float INSERT) {
+    public void increaseCredit(final float INSERT) {
         gameState.increaseCredit(this, INSERT);
     }
 

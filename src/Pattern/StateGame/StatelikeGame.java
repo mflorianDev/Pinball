@@ -2,7 +2,7 @@ package Pattern.StateGame;
 
 public interface StatelikeGame {
 
-    void increaseCredit(final StateContextGame STATE_CONTEXT, final Float INSERT);
+    void increaseCredit(final StateContextGame STATE_CONTEXT, final float INSERT);
 
     void play(final StateContextGame STATE_CONTEXT);
 

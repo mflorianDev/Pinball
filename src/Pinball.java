@@ -6,7 +6,7 @@ import Pattern.Command.ElementControl;
 import Pattern.Composite.Component;
 import Pattern.Composite.ElementComposite;
 import Pattern.StateGame.*;
-import Pattern.VisitorGame.StateVisit;
+import Pattern.VisitorGame.ElementVisitor;
 
 import java.util.Scanner;
 
@@ -21,11 +21,14 @@ public class Pinball {
     private Boolean isBallInBoard = false;
     private String expectedLandingLocation = null;
     private Component winTarget = null;
+    ElementVisitor elementVisitor = new ElementVisitor();
     private int totalPoints = 0;
 
     // Singleton
     private static Pinball instance = null;
+
     private Pinball() { }
+
     public static Pinball Instance() {
         if (instance == null) {
             instance = new Pinball();
@@ -51,7 +54,7 @@ public class Pinball {
             switch (input){
                 case 'i':
                     System.out.print("Insert amount (Float Number): ");
-                    Float insert = scan.nextFloat();
+                    float insert = scan.nextFloat();
                     stateContextGame.increaseCredit(insert);
                     break;
                 case 'p':
@@ -61,14 +64,6 @@ public class Pinball {
                     break;
                 case 'a':
                     // If in playing mode and ball in board
-                    /*
-                    if (stateContextGame.getGameState().equals("StatePlaying") && isBallInBoard){
-                        userBallInteraction("a");
-                    } else if (stateContextGame.getGameState().equals("StateEnd") && isBallInBoard){
-                        // win method is active, game over will be called automatically on ball loss
-                        userBallInteraction("a");
-                    }
-                     */
                     if (stateContextGame.getGameState().equals("StatePlaying")
                             || stateContextGame.getGameState().equals("StateEnd")
                             && isBallInBoard){
@@ -78,14 +73,6 @@ public class Pinball {
                     break;
                 case 'd':
                     // If in playing mode and ball in board
-                    /*
-                    if (stateContextGame.getGameState().equals("StatePlaying") && isBallInBoard){
-                        userBallInteraction("d");
-                    } else if (stateContextGame.getGameState().equals("StateEnd") && isBallInBoard){
-                        // win method is active, game over will be called automatically on ball loss
-                        userBallInteraction("d");
-                    }
-                     */
                     if (stateContextGame.getGameState().equals("StatePlaying")
                             || stateContextGame.getGameState().equals("StateEnd")
                             && isBallInBoard){
@@ -94,6 +81,17 @@ public class Pinball {
                     }
 
                     break;
+                /* This would be a better solution, but it is not working! :(
+                    case 'a':
+                    case 'd':
+                        if (stateContextGame.getGameState().equals("StatePlaying")
+                                || stateContextGame.getGameState().equals("StateEnd")
+                                && isBallInBoard){
+                            // StateEnd: win method is active, game over will be called automatic on ball loss
+                            userBallInteraction(Character.toString(input));
+                        }
+                    break;
+                */
                 case 's':
                     // if in playing mode and ball not yet initalized then initalize ball
                     if (stateContextGame.getGameState().equals("StatePlaying")){
@@ -140,7 +138,7 @@ public class Pinball {
             Command command = (Command) component;
             this.elementControl.touchedElement(command);
             // Get points of hit element and add to totalPoints
-            totalPoints += component.getPoints();
+            totalPoints += getPointsFromTouchedElement(component);
             System.out.println("Total points: " + totalPoints);
             if (component.getClass() == Ramp.class){
                 System.out.println("\nThe ball is now inside a Ramp!");
@@ -200,6 +198,19 @@ public class Pinball {
             randomComponent = mainBoard.getComponentList().get(randomInteger);
         } while (randomComponent.getClass().getSimpleName().equals("Ramp"));
         winTarget = randomComponent;
+    }
+
+    private int getPointsFromTouchedElement(Component component){
+        if(component.getClass() == Ramp.class){
+            ((Ramp) component).accept(elementVisitor);
+        }
+        if(component.getClass() == Bumper.class){
+            ((Bumper) component).accept(elementVisitor);
+        }
+        if(component.getClass() == Target.class){
+            ((Target) component).accept(elementVisitor);
+        }
+        return elementVisitor.getElementPoints();
     }
 
 }

@@ -4,7 +4,7 @@ import Pattern.Command.Command;
 import Pattern.Command.TouchedElement;
 import Pattern.Composite.Component;
 import Pattern.VisitorGame.AcceptVisitor;
-import Pattern.VisitorGame.StateVisit;
+import Pattern.VisitorGame.Visitor;
 
 public class Bumper extends Command implements Component, AcceptVisitor {
 
@@ -33,17 +33,12 @@ public class Bumper extends Command implements Component, AcceptVisitor {
     }
 
     @Override
-    public void accept(StateVisit stateVisit) {
-        stateVisit.visit(this);
+    public void accept(Visitor visitor) {
+        visitor.visit(this);
     }
 
     @Override
-    public int getPointsOrCredit() {
-        return this.bumperPointsMain;
-    }
-
-    @Override
-    public int getPoints() {
+    public int getElementPoints() {
         if(isInMainboard){
             return bumperPointsMain;
         }
@@ -51,4 +46,6 @@ public class Bumper extends Command implements Component, AcceptVisitor {
             return bumperPointsRamp;
         }
     }
+
+
 }

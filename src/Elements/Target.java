@@ -4,7 +4,7 @@ import Pattern.Command.Command;
 import Pattern.Command.TouchedElement;
 import Pattern.Composite.Component;
 import Pattern.VisitorGame.AcceptVisitor;
-import Pattern.VisitorGame.StateVisit;
+import Pattern.VisitorGame.Visitor;
 
 public class Target extends Command implements Component, AcceptVisitor {
 
@@ -33,21 +33,15 @@ public class Target extends Command implements Component, AcceptVisitor {
     }
 
     @Override
-    public void accept(StateVisit stateVisit) {
-        stateVisit.visit(this);
+    public void accept(Visitor visitor) {
+        visitor.visit(this);
     }
 
     @Override
-    public int getPointsOrCredit() {
-        return this.targetPointsMain;
-    }
-
-    @Override
-    public int getPoints() {
-        if(isInMainboard){
+    public int getElementPoints() {
+        if (isInMainboard) {
             return targetPointsMain;
-        }
-        else {
+        } else {
             return targetPointsRamp;
         }
     }

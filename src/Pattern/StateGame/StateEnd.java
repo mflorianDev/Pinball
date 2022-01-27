@@ -1,17 +1,14 @@
 package Pattern.StateGame;
 
-import Pattern.VisitorGame.AcceptVisitor;
-import Pattern.VisitorGame.StateVisit;
-
 public class StateEnd implements StatelikeGame {
-    private Float credit = null;
+    private float credit = 0;
 
-    public StateEnd(Float credit) {
+    public StateEnd(float credit) {
         this.credit = credit;
     }
 
     @Override
-    public void increaseCredit(StateContextGame STATE_CONTEXT, Float INSERT) {
+    public void increaseCredit(StateContextGame STATE_CONTEXT, float INSERT) {
         if (INSERT > 0) {
             credit += INSERT;
         } else {
