@@ -3,7 +3,7 @@ package Pattern.StateGame;
 public class StateNoCredit implements StatelikeGame {
     private float credit = 0;
 
-    public StateNoCredit(Float credit) {
+    public StateNoCredit(float credit) {
         this.credit = credit;
     }
 

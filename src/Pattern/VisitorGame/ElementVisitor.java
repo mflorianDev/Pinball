@@ -14,16 +14,16 @@ public class ElementVisitor implements Visitor {
 
     @Override
     public void visit(Bumper bumper) {
-        this.elementPoints = bumper.getPoints();
+        this.elementPoints = bumper.getElementPoints();
     }
 
     @Override
     public void visit(Target target) {
-        this.elementPoints = target.getPoints();
+        this.elementPoints = target.getElementPoints();
     }
 
     @Override
     public void visit(Ramp ramp) {
-        this.elementPoints = ramp.getPoints();
+        this.elementPoints = ramp.getElementPoints();
     }
 }

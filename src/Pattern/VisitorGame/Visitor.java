@@ -11,9 +11,9 @@ import Pattern.StateGame.StateReady;
 
 public interface Visitor {
 
-    // Visit game components
-    public void visit(Bumper bumper);
-    public void visit(Target target);
-    public void visit(Ramp ramp);
+    // Visit game elements
+    void visit(Bumper bumper);
+    void visit(Target target);
+    void visit(Ramp ramp);
 
 }

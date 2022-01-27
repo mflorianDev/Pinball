@@ -5,5 +5,4 @@ public interface Component {
 
     void printBoardElements();
 
-    int getPoints();
 }

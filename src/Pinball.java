@@ -1,9 +1,12 @@
+import Elements.Bumper;
 import Elements.Ramp;
+import Elements.Target;
 import Pattern.Command.Command;
 import Pattern.Command.ElementControl;
 import Pattern.Composite.Component;
 import Pattern.Composite.ElementComposite;
 import Pattern.StateGame.*;
+import Pattern.VisitorGame.ElementVisitor;
 
 import java.util.Scanner;
 
@@ -18,11 +21,14 @@ public class Pinball {
     private Boolean isBallInBoard = false;
     private String expectedLandingLocation = null;
     private Component winTarget = null;
+    ElementVisitor elementVisitor = new ElementVisitor();
     private int totalPoints = 0;
 
     // Singleton
     private static Pinball instance = null;
+
     private Pinball() { }
+
     public static Pinball Instance() {
         if (instance == null) {
             instance = new Pinball();
@@ -57,6 +63,23 @@ public class Pinball {
                     }
                     break;
                 case 'a':
+                    if (stateContextGame.getGameState().equals("StatePlaying")
+                            || stateContextGame.getGameState().equals("StateEnd")
+                            && isBallInBoard){
+                        // StateEnd: win method is active, game over will be called automatic on ball loss
+                        userBallInteraction("a");
+                    }
+                    break;
+                case 'd':
+                    if (stateContextGame.getGameState().equals("StatePlaying")
+                            || stateContextGame.getGameState().equals("StateEnd")
+                            && isBallInBoard){
+                        // win method is active, game over will be called automatically on ball loss
+                        userBallInteraction("d");
+                    }
+                    break;
+                /* This would be a better solution, but it is not working! :(
+                case 'a':
                 case 'd':
                     if (stateContextGame.getGameState().equals("StatePlaying")
                             || stateContextGame.getGameState().equals("StateEnd")
@@ -65,6 +88,7 @@ public class Pinball {
                         userBallInteraction(Character.toString(input));
                     }
                     break;
+                */
                 case 's':
                     // if in playing mode and ball not yet initalized then initalize ball
                     if (stateContextGame.getGameState().equals("StatePlaying")){
@@ -111,7 +135,7 @@ public class Pinball {
             Command command = (Command) component;
             this.elementControl.touchedElement(command);
             // Get points of hit element and add to totalPoints
-            totalPoints += component.getPoints();
+            totalPoints += getPointsFromTouchedElement(component);
             System.out.println("Total points: " + totalPoints);
             if (component.getClass() == Ramp.class){
                 System.out.println("\nThe ball is now inside a Ramp!");
@@ -148,7 +172,6 @@ public class Pinball {
 
     // process interaction of ball movement and user input
     private void userBallInteraction(String userInput){
-        System.out.println("The userInput is: " + userInput);
         // check if user action equals expected landing location of ball
         if (expectedLandingLocation == userInput){
             ballRoll(mainBoard, false);
@@ -172,6 +195,19 @@ public class Pinball {
             randomComponent = mainBoard.getComponentList().get(randomInteger);
         } while (randomComponent.getClass().getSimpleName().equals("Ramp"));
         winTarget = randomComponent;
+    }
+
+    private int getPointsFromTouchedElement(Component component){
+        if(component.getClass() == Ramp.class){
+            ((Ramp) component).accept(elementVisitor);
+        }
+        if(component.getClass() == Bumper.class){
+            ((Bumper) component).accept(elementVisitor);
+        }
+        if(component.getClass() == Target.class){
+            ((Target) component).accept(elementVisitor);
+        }
+        return elementVisitor.getElementPoints();
     }
 
 }

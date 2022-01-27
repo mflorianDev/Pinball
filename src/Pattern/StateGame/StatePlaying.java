@@ -4,7 +4,7 @@ public class StatePlaying implements StatelikeGame {
     private float credit = 0;
     private int ballLossCounter = 0;
 
-    public StatePlaying(Float credit) {
+    public StatePlaying(float credit) {
         this.credit = credit;
     }
 

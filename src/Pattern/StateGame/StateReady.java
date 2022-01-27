@@ -4,7 +4,7 @@ package Pattern.StateGame;
 public class StateReady implements StatelikeGame {
     private float credit = 0;
 
-    public StateReady(Float credit) {
+    public StateReady(float credit) {
         this.credit = credit;
     }
 
