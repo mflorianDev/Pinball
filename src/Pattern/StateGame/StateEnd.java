@@ -8,8 +8,18 @@ public class StateEnd implements StatelikeGame {
     }
 
     @Override
+<<<<<<< HEAD
     public void increaseCredit(StateContextGame STATE_CONTEXT, float INSERT) {
         credit += INSERT;
+=======
+    public void increaseCredit(StateContextGame STATE_CONTEXT, Float INSERT) {
+        if (INSERT > 0) {
+            credit += INSERT;
+        } else {
+            System.out.println("Inserted coin value must be greater than 0!");
+            return;
+        }
+>>>>>>> fe1aab5 (failure switch in endState corrected, some system.prints added/changed)
         System.out.println("Credit increased. Game Continues!");
     }
 
@@ -21,17 +31,23 @@ public class StateEnd implements StatelikeGame {
     @Override
     public void ballLoss(StateContextGame STATE_CONTEXT) {
         if (credit >= 1) {
-            System.out.println("GAME OVER! Switch to Ready to Play!");
+            System.out.println("***** GAME OVER! *****\n" +
+                    "Remaining Credit: " + credit +". Switch to Ready to Play!\n" +
+                    "Press 'p' to start a new game!");
             STATE_CONTEXT.setState(new StateReady(credit));
         } else {
-            System.out.println("GAME OVER! Credit Used Up! Switch to NO CREDIT.");
+            System.out.println("***** GAME OVER! *****\n" +
+                    "Credit Used Up! Switch to NO CREDIT.\n" +
+                    "Press 'i' to insert some coins.");
             STATE_CONTEXT.setState(new StateNoCredit(credit));
         }
     }
 
     @Override
     public void win(StateContextGame STATE_CONTEXT) {
-        System.out.println("WINNER! New game will be started soon!");
+        System.out.println("***** WINNER! *****\n" +
+                "New game will be started!\n" +
+                "Press 's' to operate the plunger to initialize the ball");
         STATE_CONTEXT.setState(new StatePlaying(credit));
     }
 
