@@ -57,60 +57,13 @@ public class Pinball {
                     }
                     break;
                 case 'a':
-<<<<<<< HEAD
-
-=======
-                    // If in playing mode and ball in board
-                    /*
-                    if (stateContextGame.getGameState().equals("StatePlaying") && isBallInBoard){
-                        userBallInteraction("a");
-                    } else if (stateContextGame.getGameState().equals("StateEnd") && isBallInBoard){
-                        // win method is active, game over will be called automatically on ball loss
-                        userBallInteraction("a");
-                    }
-                     */
->>>>>>> fe1aab5 (failure switch in endState corrected, some system.prints added/changed)
-                    if (stateContextGame.getGameState().equals("StatePlaying")
-                            || stateContextGame.getGameState().equals("StateEnd")
-                            && isBallInBoard){
-                        // StateEnd: win method is active, game over will be called automatic on ball loss
-                        userBallInteraction("a");
-                     }
-                    break;
-<<<<<<< HEAD
-
-
-=======
->>>>>>> fe1aab5 (failure switch in endState corrected, some system.prints added/changed)
                 case 'd':
-
-                    // If in playing mode and ball in board
-                    /*
-                    if (stateContextGame.getGameState().equals("StatePlaying") && isBallInBoard){
-                        userBallInteraction("d");
-                    } else if (stateContextGame.getGameState().equals("StateEnd") && isBallInBoard){
-                        // win method is active, game over will be called automatically on ball loss
-                        userBallInteraction("d");
-                    }
-<<<<<<< HEAD
-                     /*
                     if (stateContextGame.getGameState().equals("StatePlaying")
                             || stateContextGame.getGameState().equals("StateEnd")
                             && isBallInBoard){
                         // StateEnd: win method is active, game over will be called automatic on ball loss
                         userBallInteraction(Character.toString(input));
                     }
-                      */
-=======
-                     */
-                    if (stateContextGame.getGameState().equals("StatePlaying")
-                            || stateContextGame.getGameState().equals("StateEnd")
-                            && isBallInBoard){
-                        // win method is active, game over will be called automatically on ball loss
-                        userBallInteraction("d");
-                    }
->>>>>>> fe1aab5 (failure switch in endState corrected, some system.prints added/changed)
-
                     break;
                 case 's':
                     // if in playing mode and ball not yet initalized then initalize ball
@@ -185,16 +138,7 @@ public class Pinball {
             expectedLandingLocation = randomGenerator.getExpectedLandingLocation();
             // if ball lost inform game state
             if (expectedLandingLocation == "lost"){
-<<<<<<< HEAD
-                /**Ich würde die beiden Zeilen (166 und 167) umdrehen! zuerst System.ou.print und dann ballIsLost, wegen der Ausgabe
-
-                 * Ball lost! 2 balls left.
-                 * Ball unfortunately landed in the die hole.
-                 * The ball is lost!
-                 */
-=======
                 System.out.println("Ball unfortunately landed in the die hole.");
->>>>>>> fe1aab5 (failure switch in endState corrected, some system.prints added/changed)
                 ballIsLost();
             } else {
                 System.out.println("Press button '" + expectedLandingLocation + "' to hit the ball!");
@@ -204,6 +148,7 @@ public class Pinball {
 
     // process interaction of ball movement and user input
     private void userBallInteraction(String userInput){
+        System.out.println("The userInput is: " + userInput);
         // check if user action equals expected landing location of ball
         if (expectedLandingLocation == userInput){
             ballRoll(mainBoard, false);

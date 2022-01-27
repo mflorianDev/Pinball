@@ -9,12 +9,7 @@ public class StateReady implements StatelikeGame {
     }
 
     @Override
-<<<<<<< HEAD
     public void increaseCredit(final StateContextGame STATE_CONTEXT, final float INSERT) {
-        credit += INSERT;
-        System.out.println("Credit increased. Push play to start a new game!");
-=======
-    public void increaseCredit(final StateContextGame STATE_CONTEXT, final Float INSERT) {
         if (INSERT > 0) {
             credit += INSERT;
         } else {
@@ -22,7 +17,6 @@ public class StateReady implements StatelikeGame {
             return;
         }
         System.out.println("Credit increased. Press 'p' to start a new game!");
->>>>>>> fe1aab5 (failure switch in endState corrected, some system.prints added/changed)
         STATE_CONTEXT.setState(new StateReady(credit));
     }
 

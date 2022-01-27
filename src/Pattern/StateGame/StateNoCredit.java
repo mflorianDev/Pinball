@@ -8,17 +8,13 @@ public class StateNoCredit implements StatelikeGame {
     }
 
     @Override
-<<<<<<< HEAD
     public void increaseCredit(final StateContextGame STATE_CONTEXT, final float INSERT) {
-=======
-    public void increaseCredit(final StateContextGame STATE_CONTEXT, final Float INSERT) {
         if (INSERT > 0) {
             credit += INSERT;
         } else {
             System.out.println("Inserted coin value must be greater than 0!");
             return;
         }
->>>>>>> fe1aab5 (failure switch in endState corrected, some system.prints added/changed)
         credit += INSERT;
         if (credit == 0) {
             System.out.println("Press 'i' to insert some coins and to start a new game!");
