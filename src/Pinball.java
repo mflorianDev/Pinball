@@ -142,10 +142,6 @@ public class Pinball {
             System.out.println("Total points: " + totalPoints);
             if (component.getClass() == Ramp.class){
                 System.out.println("\nThe ball is now inside a Ramp!");
-                /*
-                TODO: change parameter to dynamically choosen ElementComposite.
-                    Problem: How to access the Element of type ElementComposite?
-                 */
                 ballRoll(rampBoard, true);
             }
             // Check if hit component is same as winning target
