@@ -22,7 +22,7 @@ public class StateReady implements StatelikeGame {
 
     @Override
     public void play(StateContextGame STATE_CONTEXT) {
-        credit--;
+        credit -= 1;
         System.out.println("Game Started.\n" +
                 "Press 's' to operate the plunger to initialize the ball");
         STATE_CONTEXT.setState(new StatePlaying(credit));

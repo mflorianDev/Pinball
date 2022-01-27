@@ -15,7 +15,6 @@ public class StateNoCredit implements StatelikeGame {
             System.out.println("Inserted coin value must be greater than 0!");
             return;
         }
-        credit += INSERT;
         if (credit == 0) {
             System.out.println("Press 'i' to insert some coins and to start a new game!");
         } else if (credit < 1) {
